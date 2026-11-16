@@ -12,22 +12,28 @@ import (
 
 // Config holds all runtime configuration for the Stock Backend API server.
 type Config struct {
-	Port                  string
-	PublicBaseURL         string
+	Port               string
+	PublicBaseURL      string
 	CORSAllowedOrigins []string
-	DatabaseURL           string
-	JWTSecret             []byte
-	AccessTokenTTL        time.Duration
-	AdminMasterKey        string
-	AdminSecret           string
-	FirebaseCredsFile     string
-	DevBypassFirebase     bool
-	APKStorageDir         string
+	DatabaseURL        string
+	JWTSecret          []byte
+	AccessTokenTTL     time.Duration
+	AdminMasterKey     string
+	AdminSecret        string
+	FirebaseCredsFile  string
+	DevBypassFirebase  bool
+	APKStorageDir      string
 }
 
 // Load reads environment variables (loading .env if present) and validates required settings.
 func Load() (*Config, error) {
-	_ = godotenv.Load()
+	// Load local configuration whether the server is started from the
+	// repository root or from the backend directory.
+	// Existing process environment variables still take precedence.
+	if err := godotenv.Load("backend/.env", ".env"); err != nil {
+		// Environment variables may be supplied by the deployment platform.
+		// Do not fail here; required settings are validated below.
+	}
 
 	port := strings.TrimSpace(os.Getenv("PORT"))
 	if port == "" {
@@ -79,16 +85,16 @@ func Load() (*Config, error) {
 	devBypass := strings.EqualFold(strings.TrimSpace(os.Getenv("DEV_BYPASS_FIREBASE")), "true")
 
 	return &Config{
-		Port:              port,
-		PublicBaseURL:     publicBaseURL,
+		Port:               port,
+		PublicBaseURL:      publicBaseURL,
 		CORSAllowedOrigins: corsAllowedOrigins,
-		DatabaseURL:       dbURL,
-		JWTSecret:         []byte(jwtSecret),
-		AccessTokenTTL:    time.Duration(ttlMinutes) * time.Minute,
-		AdminMasterKey:    strings.TrimSpace(os.Getenv("ADMIN_MASTER_KEY")),
-		AdminSecret:       strings.TrimSpace(os.Getenv("ADMIN_SECRET")),
-		FirebaseCredsFile: strings.TrimSpace(os.Getenv("FIREBASE_CREDENTIALS_FILE")),
-		DevBypassFirebase: devBypass,
-		APKStorageDir:     apkStorageDir,
+		DatabaseURL:        dbURL,
+		JWTSecret:          []byte(jwtSecret),
+		AccessTokenTTL:     time.Duration(ttlMinutes) * time.Minute,
+		AdminMasterKey:     strings.TrimSpace(os.Getenv("ADMIN_MASTER_KEY")),
+		AdminSecret:        strings.TrimSpace(os.Getenv("ADMIN_SECRET")),
+		FirebaseCredsFile:  strings.TrimSpace(os.Getenv("FIREBASE_CREDENTIALS_FILE")),
+		DevBypassFirebase:  devBypass,
+		APKStorageDir:      apkStorageDir,
 	}, nil
 }
