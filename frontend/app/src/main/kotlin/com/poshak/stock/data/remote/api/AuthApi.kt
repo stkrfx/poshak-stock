@@ -13,7 +13,7 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 /**
- * Retrofit service interface for `/v1/auth/*` endpoints.
+ * Retrofit service interface for the v1 auth endpoints.
  */
 interface AuthApi {
 

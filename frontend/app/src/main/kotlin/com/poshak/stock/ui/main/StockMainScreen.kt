@@ -234,7 +234,7 @@ fun StockMainScreen(
             isOnline = uiState.isOnline,
             onDownloadFullStock = { offlineDownloadsViewModel.downloadFullStock() },
             onDownloadCurrentFilterScope = {
-                offlineDownloadsViewModel.downloadFilteredStock(uiState.activeFilter)
+                offlineDownloadsViewModel.downloadFilteredScope(uiState.activeFilter)
             },
             onRunIncrementalSync = { offlineDownloadsViewModel.runIncrementalDeltaSyncNow() },
             onDeleteScope = { scopeId -> offlineDownloadsViewModel.deleteScope(scopeId) },

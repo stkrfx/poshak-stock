@@ -58,7 +58,7 @@ object NetworkModule {
     }
 
     /**
-     * Dedicated OkHttpClient for `/v1/auth/*` endpoints without [TokenRefreshAuthenticator]
+     * Dedicated OkHttpClient for /v1/auth/ endpoints without [TokenRefreshAuthenticator]
      * to prevent cyclic dependency during token refresh.
      */
     @Provides

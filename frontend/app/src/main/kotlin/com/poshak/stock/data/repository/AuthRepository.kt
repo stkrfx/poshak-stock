@@ -71,7 +71,7 @@ class AuthRepository @Inject constructor(
             )
         }
 
-        runCatching {
+        runCatching<Result<String>> {
             val response = authApi.preLogin(PreLoginRequestDto(mobile = normalized))
             if (response.isSuccessful && response.body()?.allowed == true) {
                 return@withContext Result.success(normalized)
@@ -86,9 +86,9 @@ class AuthRepository @Inject constructor(
                 else -> errDto?.message?.ifBlank { "Unable to verify phone number (${response.code()})" }
                     ?: "Unable to verify phone number (${response.code()})"
             }
-            Result.failure(IllegalStateException(message))
+            Result.failure<String>(IllegalStateException(message))
         }.getOrElse { e ->
-            Result.failure(
+            Result.failure<String>(
                 IllegalStateException(
                     "Network error while checking phone authorization. Check your internet connection.",
                     e
@@ -102,7 +102,7 @@ class AuthRepository @Inject constructor(
      */
     suspend fun loginWithFirebaseToken(firebaseIdToken: String): Result<UserSummaryDto> =
         withContext(Dispatchers.IO) {
-            runCatching {
+            runCatching<Result<UserSummaryDto>> {
                 val request = LoginRequestDto(
                     firebaseIdToken = firebaseIdToken.trim(),
                     deviceId = sessionManager.getOrCreateDeviceId(),
@@ -112,7 +112,9 @@ class AuthRepository @Inject constructor(
                 val response = authApi.login(request)
                 if (response.isSuccessful) {
                     val body = response.body()
-                        ?: return@withContext Result.failure(IllegalStateException("Empty login response from server"))
+                        ?: return@withContext Result.failure<UserSummaryDto>(
+    IllegalStateException("Empty login response from server")
+)
 
                     sessionManager.saveLoginSession(
                         accessToken = body.accessToken,
@@ -139,9 +141,9 @@ class AuthRepository @Inject constructor(
                 val message = errDto?.message?.ifBlank {
                     "Login failed (HTTP ${response.code()})"
                 } ?: "Login failed (HTTP ${response.code()})"
-                Result.failure(IllegalStateException(message))
+                Result.failure<UserSummaryDto>(IllegalStateException(message))
             }.getOrElse { e ->
-                Result.failure(
+                Result.failure<UserSummaryDto>(
                     IllegalStateException("Network error during login. Please try again.", e)
                 )
             }

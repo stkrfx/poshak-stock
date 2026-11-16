@@ -14,6 +14,7 @@ import (
 type Config struct {
 	Port                  string
 	PublicBaseURL         string
+	CORSAllowedOrigins []string
 	DatabaseURL           string
 	JWTSecret             []byte
 	AccessTokenTTL        time.Duration
@@ -36,6 +37,18 @@ func Load() (*Config, error) {
 	publicBaseURL := strings.TrimRight(strings.TrimSpace(os.Getenv("PUBLIC_BASE_URL")), "/")
 	if publicBaseURL == "" {
 		publicBaseURL = "http://localhost:" + port
+	}
+
+	var corsAllowedOrigins []string
+
+	for _, origin := range strings.Split(
+		os.Getenv("CORS_ALLOWED_ORIGINS"), ",",
+	) {
+		origin = strings.TrimRight(strings.TrimSpace(origin), "/")
+
+		if origin != "" {
+			corsAllowedOrigins = append(corsAllowedOrigins, origin)
+		}
 	}
 
 	dbURL := strings.TrimSpace(os.Getenv("DATABASE_URL"))
@@ -68,6 +81,7 @@ func Load() (*Config, error) {
 	return &Config{
 		Port:              port,
 		PublicBaseURL:     publicBaseURL,
+		CORSAllowedOrigins: corsAllowedOrigins,
 		DatabaseURL:       dbURL,
 		JWTSecret:         []byte(jwtSecret),
 		AccessTokenTTL:    time.Duration(ttlMinutes) * time.Minute,
