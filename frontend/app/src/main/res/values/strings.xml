@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Stock</string>
+    <string name="widget_name">Stock Quick Search</string>
+    <string name="widget_description">Search article numbers or scan barcodes directly into Stock</string>
+</resources>

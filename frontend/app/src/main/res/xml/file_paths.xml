@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- Used when streaming update APK into context.cacheDir/updates/stock-update.apk -->
+    <cache-path
+        name="updates"
+        path="updates/" />
+
+    <!-- Used when streaming update APK into context.filesDir/updates/stock-update.apk -->
+    <files-path
+        name="internal_updates"
+        path="updates/" />
+
+    <!-- Used when streaming update APK into context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) -->
+    <external-files-path
+        name="external_updates"
+        path="Download/" />
+</paths>
