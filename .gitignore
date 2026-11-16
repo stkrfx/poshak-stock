@@ -1,0 +1,29 @@
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+backend/.env
+backend/firebase-service-account.json
+**/firebase-service-account.json
+
+# APKs and generated storage
+backend/storage/
+*.apk
+*.aab
+
+# Android / Gradle generated files
+.gradle/
+**/build/
+**/.kotlin/
+local.properties
+.idea/
+*.iml
+
+# Go generated files
+*.test
+coverage.out
+
+# OS files
+.DS_Store
+Thumbs.db
